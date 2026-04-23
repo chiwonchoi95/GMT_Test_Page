@@ -374,35 +374,36 @@
   }
 
   yesBtn.addEventListener("click", function () {
-    answerQuestion("yes");
-  });
+  answerQuestion("yes");
+});
 
-  noBtn.addEventListener("click", function () {
-    answerQuestion("no");
-  });
+noBtn.addEventListener("click", function () {
+  answerQuestion("no");
+});
 
-  quitBtn.addEventListener("click", function () {
-    showQuitScreen();
-  });
+quitBtn.addEventListener("click", function () {
+  showQuitScreen();
+});
 
-  restartBtn.addEventListener("click", function () {
-    restartFlow();
-  });
+restartBtn.addEventListener("click", function () {
+  restartFlow();
+});
 
-  finalCta.addEventListener("click", function () {
-    pushEvent("final_cta_click", {
-      answered_count: state.answers.length,
-      elapsed_seconds: getElapsedSeconds(),
-      destination_url: this.href
-    });
+finalCta.addEventListener("click", function () {
+  pushEvent("final_cta_click", {
+    answered_count: state.answers.length,
+    elapsed_seconds: getElapsedSeconds(),
+    destination_url: this.href
   });
+});
 
-  pushEvent("flow_start", {
-    total_questions: questions.length,
-    elapsed_seconds: 0
-  });
+// 👇 여기 바로 실행
+pushEvent("flow_start", {
+  total_questions: questions.length,
+  elapsed_seconds: 0
+});
 
-  renderQuestion();
+renderQuestion();
 </script>
   </script>
 </body>

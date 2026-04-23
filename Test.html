@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Question Flow Landing</title>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id=GTM-NL6QKCWB'+dl;
+    f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NL6QKCWB');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #efefef;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .card {
+      background: transparent;
+      padding: 12px 0;
+    }
+
+    .progress-wrap {
+      margin-bottom: 20px;
+    }
+
+    .progress-text {
+      font-size: 14px;
+      margin-bottom: 8px;
+      color: #555;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #d8d8d8;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #1f6b8f;
+      transition: width 0.25s ease;
+    }
+
+    .question-box {
+      border: 1px solid #3b3b3b;
+      background: #fff;
+      min-height: 90px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-size: 24px;
+      margin-bottom: 28px;
+      word-break: keep-all;
+      line-height: 1.4;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .btn {
+      border: 1px solid #13435a;
+      background: #1f6b8f;
+      color: #fff;
+      padding: 16px 20px;
+      min-height: 56px;
+      font-size: 22px;
+      cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.92;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-half {
+      flex: 1;
+    }
+
+    .divider {
+      border-top: 1px dashed #aaa;
+      margin: 26px 0 22px;
+    }
+
+    .btn-quit-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-quit {
+      min-width: 160px;
+    }
+
+    .result-box {
+      border: 1px solid #3b3b3b;
+      background: #fff;
+      padding: 28px 20px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .sub-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    .link-btn {
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+      width: 100%;
+      max-width: 240px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-NL6QKCWB"
+      height="0"
+      width="0"
+      style="display:none;visibility:hidden"
+    ></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <main class="app">
+    <section id="question-screen" class="card">
+      <div class="progress-wrap">
+        <div id="progress-text" class="progress-text">1 / 10</div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div id="question-box" class="question-box">
+        질문이 여기에 표시됩니다.
+      </div>
+
+      <div class="btn-row">
+        <button id="btn-yes" class="btn btn-half">Yes</button>
+        <button id="btn-no" class="btn btn-half">No</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="btn-quit-wrap">
+        <button id="btn-quit" class="btn btn-quit">Quit</button>
+      </div>
+    </section>
+
+    <section id="complete-screen" class="hidden">
+      <div class="result-box">
+        <h2>완료되었습니다</h2>
+        <p>모든 질문에 응답했습니다.</p>
+        <p class="sub-text">아래 버튼을 눌러 다음 단계로 이동할 수 있습니다.</p>
+      </div>
+
+      <a
+        id="final-cta"
+        class="btn link-btn"
+        href="https://www.google.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        다음 단계로 이동
+      </a>
+    </section>
+
+    <section id="quit-screen" class="hidden">
+      <div class="result-box">
+        <h2>이탈 처리됨</h2>
+        <p>질문 진행을 중단했습니다.</p>
+        <p class="sub-text">필요하면 다시 처음부터 시작할 수 있습니다.</p>
+      </div>
+
+      <button id="restart-btn" class="btn">처음부터 다시하기</button>
+    </section>
+  </main>
+
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    const questions = [
+      "질문 1. 당신은 새로운 서비스에 관심이 있습니까?",
+      "질문 2. 짧은 선택형 콘텐츠를 선호합니까?",
+      "질문 3. 참여 결과가 실제 영향력을 갖는 구조에 흥미가 있습니까?",
+      "질문 4. 모바일에서 빠르게 참여 가능한 구조를 선호합니까?",
+      "질문 5. 선택 즉시 다음 단계로 넘어가는 흐름이 편합니까?",
+      "질문 6. 게임보다는 가벼운 인터랙션이 더 편합니까?",
+      "질문 7. 중간에 언제든 이탈 가능한 구조가 중요합니까?",
+      "질문 8. 여러 질문을 통해 성향을 파악하는 방식이 괜찮습니까?",
+      "질문 9. 최종적으로 추천이나 결과를 받는 것에 관심이 있습니까?",
+      "질문 10. 마지막 CTA를 눌러 다음 행동으로 이어질 의향이 있습니까?"
+    ];
+
+    const state = {
+      currentIndex: 0,
+      answers: [],
+      sessionId: generateSessionId(),
+      startTime: Date.now()
+    };
+
+    const questionScreen = document.getElementById("question-screen");
+    const completeScreen = document.getElementById("complete-screen");
+    const quitScreen = document.getElementById("quit-screen");
+
+    const questionBox = document.getElementById("question-box");
+    const progressText = document.getElementById("progress-text");
+    const progressFill = document.getElementById("progress-fill");
+
+    const yesBtn = document.getElementById("btn-yes");
+    const noBtn = document.getElementById("btn-no");
+    const quitBtn = document.getElementById("btn-quit");
+    const restartBtn = document.getElementById("restart-btn");
+    const finalCta = document.getElementById("final-cta");
+
+    function generateSessionId() {
+      return "sess_" + Math.random().toString(36).slice(2) + "_" + Date.now();
+    }
+
+    function pushEvent(eventName, params = {}) {
+      window.dataLayer.push({
+        event: eventName,
+        page_type: "question_flow",
+        session_id: state.sessionId,
+        ...params
+      });
+
+      console.log("[dataLayer.push]", eventName, params);
+    }
+
+    function getElapsedSeconds() {
+      return Math.floor((Date.now() - state.startTime) / 1000);
+    }
+
+    function renderQuestion() {
+      const currentQuestionNumber = state.currentIndex + 1;
+      const totalQuestions = questions.length;
+      const progressPercent = (currentQuestionNumber / totalQuestions) * 100;
+
+      questionBox.textContent = questions[state.currentIndex];
+      progressText.textContent = `${currentQuestionNumber} / ${totalQuestions}`;
+      progressFill.style.width = `${progressPercent}%`;
+
+      pushEvent("question_view", {
+        question_index: state.currentIndex,
+        question_number: currentQuestionNumber,
+        question_text: questions[state.currentIndex],
+        elapsed_seconds: getElapsedSeconds()
+      });
+    }
+
+    function answerQuestion(answerValue) {
+      const currentQuestionNumber = state.currentIndex + 1;
+
+      state.answers.push({
+        question_index: state.currentIndex,
+        question_number: currentQuestionNumber,
+        answer: answerValue
+      });
+
+      pushEvent("answer_click", {
+        question_index: state.currentIndex,
+        question_number: currentQuestionNumber,
+        question_text: questions[state.currentIndex],
+        answer: answerValue,
+        elapsed_seconds: getElapsedSeconds()
+      });
+
+      state.currentIndex += 1;
+
+      if (state.currentIndex >= questions.length) {
+        showCompleteScreen();
+        return;
+      }
+
+      renderQuestion();
+    }
+
+    function showCompleteScreen() {
+      questionScreen.classList.add("hidden");
+      quitScreen.classList.add("hidden");
+      completeScreen.classList.remove("hidden");
+
+      pushEvent("flow_complete", {
+        total_questions: questions.length,
+        answered_count: state.answers.length,
+        answers_json: JSON.stringify(state.answers),
+        elapsed_seconds: getElapsedSeconds()
+      });
+    }
+
+    function showQuitScreen() {
+      questionScreen.classList.add("hidden");
+      completeScreen.classList.add("hidden");
+      quitScreen.classList.remove("hidden");
+
+      pushEvent("quit_click", {
+        quit_at_question_index: state.currentIndex,
+        quit_at_question_number: state.currentIndex + 1,
+        answered_count: state.answers.length,
+        answers_json: JSON.stringify(state.answers),
+        elapsed_seconds: getElapsedSeconds()
+      });
+    }
+
+    function restartFlow() {
+      state.currentIndex = 0;
+      state.answers = [];
+      state.startTime = Date.now();
+      state.sessionId = generateSessionId();
+
+      completeScreen.classList.add("hidden");
+      quitScreen.classList.add("hidden");
+      questionScreen.classList.remove("hidden");
+
+      pushEvent("flow_restart", {
+        elapsed_seconds: 0
+      });
+
+      renderQuestion();
+    }
+
+    yesBtn.addEventListener("click", function () {
+      answerQuestion("yes");
+    });
+
+    noBtn.addEventListener("click", function () {
+      answerQuestion("no");
+    });
+
+    quitBtn.addEventListener("click", function () {
+      showQuitScreen();
+    });
+
+    restartBtn.addEventListener("click", function () {
+      restartFlow();
+    });
+
+    finalCta.addEventListener("click", function () {
+      pushEvent("final_cta_click", {
+        answered_count: state.answers.length,
+        answers_json: JSON.stringify(state.answers),
+        elapsed_seconds: getElapsedSeconds(),
+        destination_url: this.href
+      });
+    });
+
+    window.addEventListener("load", function () {
+      pushEvent("flow_start", {
+        total_questions: questions.length,
+        elapsed_seconds: 0
+      });
+
+      renderQuestion();
+    });
+  </script>
+</body>
+</html>

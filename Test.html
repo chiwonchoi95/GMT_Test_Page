@@ -220,185 +220,190 @@
     </section>
   </main>
 
-  <script>
-    window.dataLayer = window.dataLayer || [];
+<script>
+  window.dataLayer = window.dataLayer || [];
 
-    const questions = [
-      "질문 1. 당신은 새로운 서비스에 관심이 있습니까?",
-      "질문 2. 짧은 선택형 콘텐츠를 선호합니까?",
-      "질문 3. 참여 결과가 실제 영향력을 갖는 구조에 흥미가 있습니까?",
-      "질문 4. 모바일에서 빠르게 참여 가능한 구조를 선호합니까?",
-      "질문 5. 선택 즉시 다음 단계로 넘어가는 흐름이 편합니까?",
-      "질문 6. 게임보다는 가벼운 인터랙션이 더 편합니까?",
-      "질문 7. 중간에 언제든 이탈 가능한 구조가 중요합니까?",
-      "질문 8. 여러 질문을 통해 성향을 파악하는 방식이 괜찮습니까?",
-      "질문 9. 최종적으로 추천이나 결과를 받는 것에 관심이 있습니까?",
-      "질문 10. 마지막 CTA를 눌러 다음 행동으로 이어질 의향이 있습니까?"
-    ];
+  const questions = [
+    "질문 1. 당신은 새로운 서비스에 관심이 있습니까?",
+    "질문 2. 짧은 선택형 콘텐츠를 선호합니까?",
+    "질문 3. 참여 결과가 실제 영향력을 갖는 구조에 흥미가 있습니까?",
+    "질문 4. 모바일에서 빠르게 참여 가능한 구조를 선호합니까?",
+    "질문 5. 선택 즉시 다음 단계로 넘어가는 흐름이 편합니까?",
+    "질문 6. 게임보다는 가벼운 인터랙션이 더 편합니까?",
+    "질문 7. 중간에 언제든 이탈 가능한 구조가 중요합니까?",
+    "질문 8. 여러 질문을 통해 성향을 파악하는 방식이 괜찮습니까?",
+    "질문 9. 최종적으로 추천이나 결과를 받는 것에 관심이 있습니까?",
+    "질문 10. 마지막 CTA를 눌러 다음 행동으로 이어질 의향이 있습니까?"
+  ];
 
-    const state = {
-      currentIndex: 0,
-      answers: [],
-      sessionId: generateSessionId(),
-      startTime: Date.now()
-    };
+  const state = {
+    currentIndex: 0,
+    answers: [],
+    sessionId: generateSessionId(),
+    startTime: Date.now(),
+    questionShownAt: null
+  };
 
-    const questionScreen = document.getElementById("question-screen");
-    const completeScreen = document.getElementById("complete-screen");
-    const quitScreen = document.getElementById("quit-screen");
+  const questionScreen = document.getElementById("question-screen");
+  const completeScreen = document.getElementById("complete-screen");
+  const quitScreen = document.getElementById("quit-screen");
 
-    const questionBox = document.getElementById("question-box");
-    const progressText = document.getElementById("progress-text");
-    const progressFill = document.getElementById("progress-fill");
+  const questionBox = document.getElementById("question-box");
+  const progressText = document.getElementById("progress-text");
+  const progressFill = document.getElementById("progress-fill");
 
-    const yesBtn = document.getElementById("btn-yes");
-    const noBtn = document.getElementById("btn-no");
-    const quitBtn = document.getElementById("btn-quit");
-    const restartBtn = document.getElementById("restart-btn");
-    const finalCta = document.getElementById("final-cta");
+  const yesBtn = document.getElementById("btn-yes");
+  const noBtn = document.getElementById("btn-no");
+  const quitBtn = document.getElementById("btn-quit");
+  const restartBtn = document.getElementById("restart-btn");
+  const finalCta = document.getElementById("final-cta");
 
-    function generateSessionId() {
-      return "sess_" + Math.random().toString(36).slice(2) + "_" + Date.now();
-    }
+  function generateSessionId() {
+    return "sess_" + Math.random().toString(36).slice(2) + "_" + Date.now();
+  }
 
-    function pushEvent(eventName, params = {}) {
-      window.dataLayer.push({
-        event: eventName,
-        page_type: "question_flow",
-        session_id: state.sessionId,
-        ...params
-      });
+  function pushEvent(eventName, params = {}) {
+    window.dataLayer.push({
+      event: eventName,
+      page_type: "question_flow",
+      session_id: state.sessionId,
+      ...params
+    });
+    console.log("[dataLayer.push]", eventName, params);
+  }
 
-      console.log("[dataLayer.push]", eventName, params);
-    }
+  function getElapsedSeconds() {
+    return Math.floor((Date.now() - state.startTime) / 1000);
+  }
 
-    function getElapsedSeconds() {
-      return Math.floor((Date.now() - state.startTime) / 1000);
-    }
+  function getQuestionDwellSeconds() {
+    if (!state.questionShownAt) return 0;
+    return Math.floor((Date.now() - state.questionShownAt) / 1000);
+  }
 
-    function renderQuestion() {
-      const currentQuestionNumber = state.currentIndex + 1;
-      const totalQuestions = questions.length;
-      const progressPercent = (currentQuestionNumber / totalQuestions) * 100;
+  function renderQuestion() {
+    const currentQuestionNumber = state.currentIndex + 1;
+    const totalQuestions = questions.length;
+    const progressPercent = (currentQuestionNumber / totalQuestions) * 100;
 
-      questionBox.textContent = questions[state.currentIndex];
-      progressText.textContent = `${currentQuestionNumber} / ${totalQuestions}`;
-      progressFill.style.width = `${progressPercent}%`;
+    questionBox.textContent = questions[state.currentIndex];
+    progressText.textContent = `${currentQuestionNumber} / ${totalQuestions}`;
+    progressFill.style.width = `${progressPercent}%`;
 
-      pushEvent("question_view", {
-        question_index: state.currentIndex,
-        question_number: currentQuestionNumber,
-        question_text: questions[state.currentIndex],
-        elapsed_seconds: getElapsedSeconds()
-      });
-    }
+    state.questionShownAt = Date.now();
 
-    function answerQuestion(answerValue) {
-      const currentQuestionNumber = state.currentIndex + 1;
+    pushEvent("question_view", {
+      question_index: state.currentIndex,
+      question_number: currentQuestionNumber,
+      question_text: questions[state.currentIndex],
+      elapsed_seconds: getElapsedSeconds()
+    });
+  }
 
-      state.answers.push({
-        question_index: state.currentIndex,
-        question_number: currentQuestionNumber,
-        answer: answerValue
-      });
+  function answerQuestion(answerValue) {
+    const currentQuestionNumber = state.currentIndex + 1;
 
-      pushEvent("answer_click", {
-        question_index: state.currentIndex,
-        question_number: currentQuestionNumber,
-        question_text: questions[state.currentIndex],
-        answer: answerValue,
-        elapsed_seconds: getElapsedSeconds()
-      });
-
-      state.currentIndex += 1;
-
-      if (state.currentIndex >= questions.length) {
-        showCompleteScreen();
-        return;
-      }
-
-      renderQuestion();
-    }
-
-    function showCompleteScreen() {
-      questionScreen.classList.add("hidden");
-      quitScreen.classList.add("hidden");
-      completeScreen.classList.remove("hidden");
-
-      pushEvent("flow_complete", {
-        total_questions: questions.length,
-        answered_count: state.answers.length,
-        answers_json: JSON.stringify(state.answers),
-        elapsed_seconds: getElapsedSeconds()
-      });
-    }
-
-    function showQuitScreen() {
-      questionScreen.classList.add("hidden");
-      completeScreen.classList.add("hidden");
-      quitScreen.classList.remove("hidden");
-
-      pushEvent("quit_click", {
-        quit_at_question_index: state.currentIndex,
-        quit_at_question_number: state.currentIndex + 1,
-        answered_count: state.answers.length,
-        answers_json: JSON.stringify(state.answers),
-        elapsed_seconds: getElapsedSeconds()
-      });
-    }
-
-    function restartFlow() {
-      state.currentIndex = 0;
-      state.answers = [];
-      state.startTime = Date.now();
-      state.sessionId = generateSessionId();
-
-      completeScreen.classList.add("hidden");
-      quitScreen.classList.add("hidden");
-      questionScreen.classList.remove("hidden");
-
-      pushEvent("flow_restart", {
-        elapsed_seconds: 0
-      });
-
-      renderQuestion();
-    }
-
-    yesBtn.addEventListener("click", function () {
-      answerQuestion("yes");
+    state.answers.push({
+      question_index: state.currentIndex,
+      question_number: currentQuestionNumber,
+      answer: answerValue
     });
 
-    noBtn.addEventListener("click", function () {
-      answerQuestion("no");
+    pushEvent("answer_click", {
+      question_index: state.currentIndex,
+      question_number: currentQuestionNumber,
+      question_text: questions[state.currentIndex],
+      answer: answerValue,
+      dwell_seconds: getQuestionDwellSeconds(),
+      elapsed_seconds: getElapsedSeconds()
     });
 
-    quitBtn.addEventListener("click", function () {
-      showQuitScreen();
+    state.currentIndex += 1;
+
+    if (state.currentIndex >= questions.length) {
+      showCompleteScreen();
+      return;
+    }
+
+    renderQuestion();
+  }
+
+  function showCompleteScreen() {
+    questionScreen.classList.add("hidden");
+    quitScreen.classList.add("hidden");
+    completeScreen.classList.remove("hidden");
+
+    pushEvent("flow_complete", {
+      total_questions: questions.length,
+      answered_count: state.answers.length,
+      answers_json: JSON.stringify(state.answers),
+      elapsed_seconds: getElapsedSeconds()
+    });
+  }
+
+  function showQuitScreen() {
+    questionScreen.classList.add("hidden");
+    completeScreen.classList.add("hidden");
+    quitScreen.classList.remove("hidden");
+
+    pushEvent("quit_click", {
+      quit_at_question_index: state.currentIndex,
+      quit_at_question_number: state.currentIndex + 1,
+      answered_count: state.answers.length,
+      dwell_seconds: getQuestionDwellSeconds(),
+      elapsed_seconds: getElapsedSeconds()
+    });
+  }
+
+  function restartFlow() {
+    state.currentIndex = 0;
+    state.answers = [];
+    state.startTime = Date.now();
+    state.sessionId = generateSessionId();
+    state.questionShownAt = null;
+
+    completeScreen.classList.add("hidden");
+    quitScreen.classList.add("hidden");
+    questionScreen.classList.remove("hidden");
+
+    pushEvent("flow_restart", {
+      elapsed_seconds: 0
     });
 
-    restartBtn.addEventListener("click", function () {
-      restartFlow();
-    });
+    renderQuestion();
+  }
 
-    finalCta.addEventListener("click", function () {
-      pushEvent("final_cta_click", {
-        answered_count: state.answers.length,
-        answers_json: JSON.stringify(state.answers),
-        elapsed_seconds: getElapsedSeconds(),
-        destination_url: this.href
-      });
-    });
+  yesBtn.addEventListener("click", function () {
+    answerQuestion("yes");
+  });
 
-    document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(() => {
-        pushEvent("flow_start", {
-          total_questions: questions.length,
-          elapsed_seconds: 0
-        });
-      }, 200);
-      
-      renderQuestion();
+  noBtn.addEventListener("click", function () {
+    answerQuestion("no");
+  });
+
+  quitBtn.addEventListener("click", function () {
+    showQuitScreen();
+  });
+
+  restartBtn.addEventListener("click", function () {
+    restartFlow();
+  });
+
+  finalCta.addEventListener("click", function () {
+    pushEvent("final_cta_click", {
+      answered_count: state.answers.length,
+      elapsed_seconds: getElapsedSeconds(),
+      destination_url: this.href
     });
+  });
+
+  pushEvent("flow_start", {
+    total_questions: questions.length,
+    elapsed_seconds: 0
+  });
+
+  renderQuestion();
+</script>
   </script>
 </body>
 </html>

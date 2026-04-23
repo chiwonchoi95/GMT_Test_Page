@@ -390,16 +390,13 @@
     });
 
     document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(() => {
-      pushEvent("flow_start", {
-        total_questions: questions.length,
-        elapsed_seconds: 0
-      });
-    }, 200);
-
-    renderQuestion();
-  });
-
+      setTimeout(() => {
+        pushEvent("flow_start", {
+          total_questions: questions.length,
+          elapsed_seconds: 0
+        });
+      }, 200);
+      
       renderQuestion();
     });
   </script>

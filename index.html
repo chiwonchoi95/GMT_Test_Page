@@ -1,34 +1,141 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Test Landing</title>
-<!-- Google Tag Manager -->
-<script>
-(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id=GTM-NL6QKCWB'+dl;
-f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NL6QKCWB');
-</script>
-<!-- End Google Tag Manager -->
 
-</script>
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id=GTM-NL6QKCWB'+dl;
+    f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NL6QKCWB');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      line-height: 1.6;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+    }
+
+    .section {
+      margin-top: 32px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button, a.cta-link {
+      padding: 12px 18px;
+      border: 1px solid #333;
+      background: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      color: #000;
+      display: inline-block;
+    }
+  </style>
 </head>
-
 <body>
- <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NL6QKCWB"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript>
+    <iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-NL6QKCWB"
+      height="0"
+      width="0"
+      style="display:none;visibility:hidden"
+    ></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
-  <h1>테스트 페이지</h1>
-  <button id="cta">클릭 버튼</button>
+  <h1>테스트 랜딩 페이지</h1>
+  <p>버튼별 클릭 이벤트를 구분해서 잡기 위한 예제 페이지</p>
+
+  <section class="section">
+    <h2>상단 CTA</h2>
+    <div class="btn-group">
+      <button
+        id="cta_main_top"
+        class="cta-button"
+        data-cta-name="main_top"
+        data-cta-position="top"
+      >
+        상단 메인 CTA
+      </button>
+
+      <button
+        id="cta_secondary_top"
+        class="cta-button"
+        data-cta-name="secondary_top"
+        data-cta-position="top"
+      >
+        상단 서브 CTA
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>중단 배너 영역</h2>
+    <div class="btn-group">
+      <button
+        id="cta_banner_mid"
+        class="cta-button"
+        data-cta-name="banner_mid"
+        data-cta-position="middle"
+      >
+        중단 배너 CTA
+      </button>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>하단 CTA</h2>
+    <div class="btn-group">
+      <button
+        id="cta_main_bottom"
+        class="cta-button"
+        data-cta-name="main_bottom"
+        data-cta-position="bottom"
+      >
+        하단 메인 CTA
+      </button>
+
+      <a
+        href="https://example.com"
+        id="cta_link_bottom"
+        class="cta-link cta-button"
+        data-cta-name="link_bottom"
+        data-cta-position="bottom"
+      >
+        하단 링크 CTA
+      </a>
+    </div>
+  </section>
 
   <script>
-    document.getElementById("cta").addEventListener("click", function() {
-      console.log("CTA 클릭됨");
+    const ctaButtons = document.querySelectorAll('.cta-button');
+
+    ctaButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        console.log('CTA 클릭:', {
+          id: this.id,
+          name: this.dataset.ctaName,
+          position: this.dataset.ctaPosition
+        });
+      });
     });
   </script>
 </body>
